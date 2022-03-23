@@ -1,6 +1,6 @@
 # Programación 2022-1
 
-El taller grupal se encuentra en la carpeta "Laboratorio 2".
+El taller grupal se encuentra en la carpeta "Laboratorio2".
 
 
 Integrantes: 
