@@ -23,7 +23,7 @@ def pruebas_mas_de_dos_horas():
             titulos.append(i["Titulo"])
     return titulos
 
-print(pruebas_mas_de_dos_horas())
+#  print(pruebas_mas_de_dos_horas())
 
 def pruebas_no_presenciales():
     url = []
@@ -31,7 +31,7 @@ def pruebas_no_presenciales():
         if i["TipoFormacion"] != "Presencial":
             url.append(i["URL"])
     return url
-print(pruebas_no_presenciales())
+#  print(pruebas_no_presenciales())
 
 def profesor_y_titulo(ID):
     tituloyprofesor = []
@@ -44,25 +44,21 @@ def profesor_y_titulo(ID):
             tituloyprofesor.append(nombres)
             break
     return tituloyprofesor
-print(profesor_y_titulo('A15050007'))
+#  print(profesor_y_titulo('A15050007'))
 
-def profesor_y_titulo_sin_ID():
-    tituloyprofesor = []
+def prof_titulos_dict():
+    tituloyprofesor = {}
     nombres = []
     for i in pruebas:
-        sublista = []
+        nombres = []
         for a in i['Profesorado']:
             nombres.append(a['NombreCompleto'])
-        sublista.append(nombres)
-        sublista.append(i['Titulo'])
-        tituloyprofesor.append(sublista)
-return tituloyprofesor
-print(profesor_y_titulo_sin_ID())
+        tituloyprofesor[i['Titulo']] = nombres
+    return tituloyprofesor
+print(prof_titulos_dict())
 
-def prof_y_titulo_to_dict():
-    list = profesor_y_titulo_sin_ID
-    for i in list:
-        list[i[0]]: i[[1]]
+with open("Titulos y profesores.json", 'w') as jsonfile:
+    json.dump(prof_titulos_dict(), jsonfile)
 
 
 
