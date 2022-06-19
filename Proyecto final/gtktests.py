@@ -1,81 +1,70 @@
+import gi
 import sys
-import gi
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw
 
-import gi
-gi.require_version('Gtk', '4.0')
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-def on_activate(app):
-    win = Gtk.ApplicationWindow(application=app)
-    win.present()
+class mainWindow(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="Sway recorder")
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_border_width(8)
+        self.set_default_size(600, 250)
+        self.set_resizable(False)
 
-app = Gtk.Application()
-app.connect('activate', on_activate)
 
-app.run(None)
-#  class MainWindow(Gtk.ApplicationWindow):
-#      def __init__(self, *args, **kwargs):
-#          super().__init__(*args, **kwargs)
-#          self.box1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-#          self.set_child(self.box1)
-#
-#          self.button = Gtk.Button(label="Hello")
-#          self.box1.append(self.button)
-#          self.button.connect('clicked', self.hello)
-#          self.set_default_size(600, 250)
-#          self.set_title("MyApp")
-#          self.box1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-#          self.box2 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-#          self.box3 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-#
-#          self.button = Gtk.Button(label="Hello")
-#          self.button.connect('clicked', self.hello)
-#
-#          self.set_child(self.box1)  # Horizontal box to window
-#          self.box1.append(self.box2)  # Put vert box in that box
-#          self.box1.append(self.box3)  # And another one, empty for now
-#
-#          self.box2.append(self.button) # Put button in the first of the two vertial boxes
-#          self.check = Gtk.CheckButton(label="And goodbye?")
-#          self.box2.append(self.check)
-#
-#      def hello(self, button):
-#          print("Hello world")
-#          if self.check.get_active():
-#              print("Goodbye world!")
-#              self.close()
-#
-#  class MyApp(Adw.Application):
-#      def __init__(self, **kwargs):
-#          super().__init__(**kwargs)
-#          self.connect('activate', self.on_activate)
-#
-#      def on_activate(self, app):
-#          self.win = MainWindow(application=app)
-#          self.win.present()
-#
-#  app = MyApp(application_id="com.example.GtkApplication")
-#  app.run(sys.argv)
+        # self.box1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        # # self.add(self.box1)       
+        #
+        # self.box2 = Gtk.Box(spacing=6)
+        # self.add(self.box2)       
+        # self.box2.pack_start(self.box1, True, True, 0)
 
-#segmento genérico del website de gtk
+        audioLabel = Gtk.Label(label="Audio Source")
+        audioLabel.set_hexpand(True)
+        audioCombo=Gtk.ListStore(int,str)
+        audioCombo.append([1,"alsa_output.pci-0000_0b_00.4.analog-stereo"])
+        audioCombo.append([2, "proof"])
+        audioCombo=Gtk.ComboBox.new_with_model_and_entry(audioCombo)
+        audioCombo.set_entry_text_column(1)
+        # self.box1.pack_start(audioCombo, True, True, 0)
 
-#  def on_activate(app):
-#      # … create a new window…
-#      win = Gtk.ApplicationWindow(application=app)
-#      # … with a button in it…
-#      btn = Gtk.Button(label='Hello, World!')
-#      # … which closes the window when clicked
-#      btn.connect('clicked', lambda x: win.close())
-#      win.set_child(btn)
-#      win.present()
-#
-#  # Create a new application
-#  app = Gtk.Application(application_id='com.example.GtkApplication')
-#  app.connect('activate', on_activate)
-#
-#  # Run the application
-#  app.run(None)
 
+        outputLabel = Gtk.Label(label="output")
+        ouputs=Gtk.ListStore(int,str)
+        ouputs.append([1,"uuh"])
+        outputsCombo=Gtk.ComboBox.new_with_model_and_entry(ouputs)
+        outputsCombo.set_entry_text_column(1)
+        # self.box1.pack_start(outputsCombo, True, True, 0)
+
+        recordButton = Gtk.Button(label="Start recording")
+        recordButton.connect("clicked", self.on_button_clicked)
+        # recordButton.set_hexpand(True) #Esta función hace que se centre el botón record.
+        # self.box2.pack_start(self.button, True, True, 0)
+
+        asd = Gtk.Button(label="HOLA!")
+        asd.connect("clicked", self.on_button_clicked)
+
+        grid = Gtk.Grid(column_spacing = 10, row_spacing = 10, column_homogeneous = True)
+        grid.insert_column(1)
+        grid.attach(audioLabel, 0, 0, 1, 1)
+        grid.attach(audioCombo, 0, 1, 1, 1)
+        # grid.attach_next_to(outputLabel, outputsCombo, Gtk.PositionType.TOP, 1, 1)
+        grid.attach(asd, 3, 1, 1, 1)
+        grid.attach(outputsCombo, 1, 1, 1, 1)
+        grid.attach(recordButton, 2, 58, 1, 1)
+
+
+
+        self.add(grid)
+
+
+    def on_button_clicked(self, button):
+        print("Recording has started")
+
+
+
+win = mainWindow()
+win.connect("destroy", Gtk.main_quit)
+win.show_all()
+Gtk.main()
