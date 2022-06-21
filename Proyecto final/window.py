@@ -12,6 +12,9 @@ output = bashdata.screens[0]
 audio = bashdata.defaultOutput
 fName = bashdata.getDate()
 delayTime = 0
+audioDict={"Default input": bashdata.defaultInput, "Default output": bashdata.defaultOutput} #Diccionario para que en el app algunos valores de aparezcan bajo el alias "Default input" o "Default output"
+for i in bashdata.sources:
+    audioDict[i] = i
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
@@ -102,8 +105,8 @@ class mainWindow(Gtk.Window):
         emptyLabel2 = Gtk.Label()
 
 
-        recordButton = Gtk.Button(label="Start recording")
-        recordButton.connect("clicked", self.startRecording)
+        recordButton = Gtk.ToggleButton(label="Start recording")
+        recordButton.connect("toggled", self.startRecording)
 
 
         grid = Gtk.Grid(column_spacing = 10, row_spacing = 10)
@@ -155,19 +158,27 @@ class mainWindow(Gtk.Window):
         print(selectArea)
 
     def startRecording(self, widget):
+        global wfProcess
+        
+        if widget.get_active():
+            fName = fileName.get_text()
+            delayTime = delayButton.get_text()
+            audio = audioCombo.get_child()  # Se crea un nuevo instance para usar el método "get_text" que permite obtener el valor de los comboBoxes
+            output = outputsCombo.get_child()
 
-        fName = fileName.get_text()
-        delayTime = delayButton.get_text()
-        audio = audioCombo.get_child()  # Se crea un nuevo instance para usar el método "get_text" que permite obtener el valor de los comboBoxes
-        output = outputsCombo.get_child()
+            time.sleep(int(delayTime))
+            print("Recording has started")
 
-        time.sleep(int(delayTime))
-        print("Recording has started")
+            wf_recorder = ["wf-recorder", f"--audio={audioDict[audio.get_text()]}", f"-f {fName}.mp4", f"--output={output.get_text()}", "--bframes=4", "-g", f'"{selectArea}"']
+            print(' '.join(wf_recorder))
 
-        wf_recorder = ["wf-recorder", f"--audio={audio.get_text()}", f"-f {fName}.mp4", f"--output={output.get_text()}", "--bframes=4", "-g", f'"{selectArea}"']
-        print(' '.join(wf_recorder))
-        # print(wf_recorder[-1])
-        subprocess.Popen(wf_recorder, cwd=fPath)
+            widget.set_label("Stop recording")
+            # print(wf_recorder[-1])
+            wfProcess = subprocess.Popen(wf_recorder, cwd=fPath)
+        else:
+            # wfProcess.kill()
+            os.system("killall -s SIGINT wf-recorder")
+            widget.set_label("Start recording")
 
 
 
