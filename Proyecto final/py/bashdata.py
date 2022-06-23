@@ -12,7 +12,7 @@ def getAudioSources():
         audioSources = srces.read()
 
 
-    for i in ["\t", "\n", "Name:"]: #Con esta iteraciión elimino los tabs, saltos de línea y strings "Name:"
+    for i in ["\t", "\n", "Name:"]: #Con esta iteración elimino los tabs, saltos de línea y strings "Name:"
         audioSources = audioSources.replace(i, "")
     sources = []
     for i in audioSources.split(" "):
@@ -20,7 +20,7 @@ def getAudioSources():
             sources.append(i)
     return defaultInput, defaultOutput, sources
 
-defaultInput, defaultOutput, sources = getAudioSources()
+defaultInput, defaultOutput, sources = getAudioSources() #asigna variables el resultado de la función
 
 # print(defaultOutput)
 # print(defaultInput)
@@ -30,9 +30,11 @@ defaultInput, defaultOutput, sources = getAudioSources()
 #     with os.popen("swaymsg -t get_outputs | ") as dO:
 #         defaultOutput = dO.read()[:-1] #[:-1] borra el salto de línea
 def getOutputs():
-
     defaultOutput = subprocess.check_output(["swaymsg", "-t", "get_outputs"])
-    return [o["name"] for o in json.loads(defaultOutput)]
+    outp = []
+    for i in json.loads(defaultOutput):
+        outp.append(i['name'])
+    return outp
 getOutputs()
 screens = getOutputs()
 # print(getOutputs())
