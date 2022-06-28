@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
+
 import bashdata
 import gi
 import subprocess
 import time
 import os
 
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+from gi.repository import AyatanaAppIndicator3 as AppIndicator
 
 #Default values
 fPath = os.environ['HOME'] + "/Videos" #Carpeta ~/Videos
@@ -17,6 +21,8 @@ delayTime = 0
 audioDict={"Default input": bashdata.defaultInput, "Default output": bashdata.defaultOutput} #Diccionario para que en el app algunos valores de aparezcan bajo el alias "Default input" o "Default output"
 for i in bashdata.sources:  # agrega al diccionario outputs que no son defaults
     audioDict[i] = i
+    
+
 
 
 class mainWindow(Gtk.Window):
@@ -163,6 +169,8 @@ class mainWindow(Gtk.Window):
             audio = audioCombo.get_child()  # Se crea un nuevo instance para usar el método "get_text" que permite obtener el valor de los comboBoxes, de lo contrario "audio Combo" al ser un objeto de la clase Gtk.ComboBox no puede utilizar este método
             output = outputsCombo.get_child()
 
+            # self.hide() #minimiza la ventana
+
             time.sleep(int(delayTime)) #retrasa la grabación en la cantidad de segundos determinada por la variable delayTime
             print("Recording has started")
 
@@ -179,7 +187,11 @@ class mainWindow(Gtk.Window):
 
 
 
+
+
+
 win = mainWindow()
-win.connect("destroy", Gtk.main_quit)
 win.show_all()
+win.connect("destroy", Gtk.main_quit)
 Gtk.main()
+
